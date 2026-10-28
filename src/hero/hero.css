@@ -1,0 +1,489 @@
+/* ---------- scroll-driven opening ---------- */
+
+.hero {
+  --hero-length: 960svh;
+  position: relative;
+  height: var(--hero-length);
+  background: var(--ink);
+  color: var(--paper);
+}
+
+.hero__stage {
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  height: 100svh;
+  overflow: hidden;
+  background: var(--ink);
+}
+
+.hero__canvas {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+  transition: opacity 1.6s var(--ease-out);
+}
+
+.hero[data-ready] .hero__canvas {
+  opacity: 1;
+}
+
+/* every beat is positioned absolutely; JS drives opacity and --beat-shift (−1 → 0 → 1) */
+[data-beat] {
+  position: absolute;
+  opacity: 0;
+  visibility: hidden;
+  transform: translate3d(0, calc(var(--beat-shift, -1) * -1.6rem), 0);
+  will-change: opacity, transform;
+}
+
+.hero__cue {
+  left: 50%;
+  bottom: clamp(28px, 6svh, 56px);
+  translate: -50% 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 14px;
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: color-mix(in oklab, var(--paper) 72%, transparent);
+}
+
+.hero__cue-line {
+  width: 1px;
+  height: 44px;
+  background: linear-gradient(to bottom, transparent, var(--light-2700));
+  animation: cue 2.8s var(--ease-in-out) infinite;
+  transform-origin: top;
+}
+
+@keyframes cue {
+  0% { transform: scaleY(0); opacity: 1; }
+  55% { transform: scaleY(1); opacity: 1; }
+  100% { transform: scaleY(1); opacity: 0; }
+}
+
+.hero__cue-touch { display: none; }
+
+@media (hover: none) and (pointer: coarse) {
+  .hero__cue-desktop { display: none; }
+  .hero__cue-touch { display: inline; }
+}
+
+.hero__line {
+  font-family: var(--font-display);
+  font-size: clamp(1.75rem, 3.1vw, 3.4rem);
+  line-height: 1.04;
+  letter-spacing: -0.01em;
+  max-width: 13em;
+  text-wrap: balance;
+}
+
+.hero__line--off {
+  left: var(--gutter);
+  bottom: 17svh;
+}
+
+.hero__line--on {
+  right: var(--gutter);
+  top: 17svh;
+  text-align: right;
+}
+
+.hero__canvas--3d {
+  background: var(--ink);
+}
+
+/* small provenance notes: what is a recreation and what is a photograph */
+.hero__note {
+  right: var(--gutter);
+  top: calc(clamp(18px, 3svh, 32px) + 44px);
+  font-size: 10.5px;
+  font-weight: 500;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: color-mix(in oklab, var(--paper) 55%, transparent);
+}
+
+/* "5 mm": the material, at monumental scale */
+.hero__big {
+  left: var(--gutter);
+  bottom: 13svh;
+  display: flex;
+  align-items: flex-end;
+  gap: clamp(16px, 2vw, 36px);
+}
+
+.hero__big-figure {
+  font-family: var(--font-display);
+  font-size: clamp(9rem, 26vw, 30rem);
+  line-height: 0.74;
+  letter-spacing: -0.04em;
+}
+
+.hero__big-figure span {
+  font-style: italic;
+  font-size: 0.32em;
+  letter-spacing: 0;
+  margin-left: 0.08em;
+  color: var(--light-2700);
+}
+
+.hero__big-caption {
+  padding-bottom: 0.6em;
+  font-size: 13px;
+  line-height: 1.5;
+  letter-spacing: 0.02em;
+  color: color-mix(in oklab, var(--paper) 74%, transparent);
+}
+
+.hero__line--assemble {
+  right: var(--gutter);
+  bottom: 17svh;
+  text-align: right;
+  font-size: clamp(2.2rem, 4.6vw, 5.4rem);
+  line-height: 0.98;
+  max-width: 9em;
+}
+
+.hero__line em {
+  font-style: italic;
+  color: var(--light-2700);
+}
+
+/* large type is revealed through a mask that rises with the beat */
+.hero__big-figure,
+.hero__display,
+.hero__line--assemble {
+  clip-path: inset(calc((1 - var(--v, 0)) * 60%) -0.2em -0.3em -0.2em);
+}
+
+.hero__display {
+  left: var(--gutter);
+  top: 11svh;
+  font-family: var(--font-display);
+  font-size: clamp(3.4rem, 9.2vw, 11rem);
+  line-height: 0.9;
+  letter-spacing: -0.025em;
+}
+
+.hero__display em {
+  font-style: italic;
+  color: var(--light-2700);
+}
+
+.hero__quote {
+  left: var(--gutter);
+  top: 31svh;
+  max-width: 11.5em;
+  color: var(--ink);
+  font-family: var(--font-display);
+  font-size: clamp(2.2rem, 4.6vw, 5.4rem);
+  line-height: 0.98;
+  letter-spacing: -0.02em;
+  text-wrap: balance;
+}
+
+.hero__signature {
+  right: var(--gutter);
+  top: 22svh;
+  width: min(36vw, 560px);
+  color: var(--ink);
+  display: grid;
+  gap: clamp(16px, 2.4svh, 28px);
+}
+
+.hero__wordmark {
+  width: 100%;
+  height: auto;
+}
+
+.hero__claim {
+  font-family: var(--font-display);
+  font-size: clamp(1.25rem, 1.7vw, 1.9rem);
+  line-height: 1.12;
+  max-width: 20em;
+}
+
+.hero__credit {
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.hero__credit a {
+  text-decoration: none;
+  background: linear-gradient(currentColor, currentColor) 0 100% / 100% 1px no-repeat;
+  padding-bottom: 3px;
+  transition: background-size 0.5s var(--ease-out);
+}
+
+@media (hover: hover) {
+  .hero__credit a:hover { background-size: 0 1px; background-position: 100% 100%; }
+}
+
+/* chapter rail */
+
+.hero__rail {
+  position: absolute;
+  left: var(--gutter);
+  bottom: clamp(24px, 5svh, 48px);
+  z-index: 2;
+  color: color-mix(in oklab, var(--paper) 80%, transparent);
+  transition: color 0.6s;
+}
+
+.hero__rail ol {
+  display: flex;
+  gap: 18px;
+}
+
+.hero__rail button {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 0;
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  opacity: 0.42;
+  transition: opacity 0.5s var(--ease-out);
+}
+
+.hero__rail-num {
+  font-variant-numeric: tabular-nums;
+}
+
+/* only the current chapter spells out its name */
+.hero__rail-label {
+  display: inline-block;
+  max-width: 0;
+  overflow: hidden;
+  opacity: 0;
+  translate: -6px 0;
+  transition: opacity 0.5s var(--ease-out), translate 0.5s var(--ease-out), max-width 0.6s var(--ease-out);
+}
+
+.hero__rail button[data-active] { opacity: 1; }
+
+.hero__rail button[data-active] .hero__rail-label,
+.hero__rail button:focus-visible .hero__rail-label {
+  max-width: 10em;
+  opacity: 1;
+  translate: 0 0;
+}
+
+@media (hover: hover) {
+  .hero__rail button:hover { opacity: 1; }
+  .hero__rail button:hover .hero__rail-label { max-width: 10em; opacity: 1; translate: 0 0; }
+}
+
+/* the rail and controls go dark with the room */
+:root[data-header-tone='dark'] .hero__rail,
+:root[data-header-tone='dark'] .hero__controls {
+  color: color-mix(in oklab, var(--ink) 80%, transparent);
+}
+
+.hero__controls {
+  position: absolute;
+  right: var(--gutter);
+  bottom: clamp(24px, 5svh, 48px);
+  z-index: 2;
+  display: flex;
+  gap: 24px;
+  color: color-mix(in oklab, var(--paper) 62%, transparent);
+  transition: color 0.4s;
+}
+
+.hero__controls a,
+.hero__controls button {
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  text-decoration: none;
+  padding: 8px 0;
+}
+
+.hero__controls a:hover,
+.hero__controls button:hover,
+.hero__controls :focus-visible {
+  color: inherit;
+  opacity: 1;
+  text-decoration: underline;
+  text-underline-offset: 4px;
+}
+
+.hero-static__motion {
+  position: fixed;
+  left: 50%;
+  bottom: max(24px, env(safe-area-inset-bottom));
+  translate: -50% 0;
+  z-index: 40;
+  padding: 14px 22px;
+  border-radius: 999px;
+  background: var(--paper);
+  color: var(--ink);
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.hero__veil {
+  display: none;
+}
+
+.hero__handoff {
+  inset: 52% 0 0 0;
+  transform: none;
+  background: linear-gradient(to top, var(--paper) 18%, color-mix(in oklab, var(--paper) 60%, transparent) 55%, transparent);
+}
+
+/* ---------- portrait / phones: its own composition ---------- */
+
+@media (max-aspect-ratio: 9/10) {
+  .hero {
+    --hero-length: 820svh;
+  }
+
+  .hero__rail { display: none; }
+
+  .hero__veil {
+    display: block;
+    inset: 38% 0 0 0;
+    transform: none;
+    background: linear-gradient(to top, rgb(11 10 9 / 0.72) 10%, rgb(11 10 9 / 0.38) 55%, transparent);
+  }
+
+  .hero__cue {
+    bottom: calc(clamp(24px, 5svh, 48px) + 64px);
+  }
+
+  .hero__line {
+    font-size: clamp(1.9rem, 8.4vw, 3rem);
+  }
+
+  /* the rod bundle stands vertically in the right third; type sits on the left */
+  .hero__line--off,
+  .hero__line--on {
+    left: var(--gutter);
+    right: auto;
+    top: auto;
+    bottom: 15svh;
+    text-align: left;
+    max-width: 8.5em;
+  }
+
+  .hero__big {
+    flex-direction: column;
+    align-items: flex-start;
+    bottom: 15svh;
+  }
+
+  .hero__big-figure {
+    font-size: clamp(7rem, 40vw, 12rem);
+  }
+
+  .hero__big-caption {
+    padding-bottom: 0;
+  }
+
+  .hero__line--assemble {
+    left: var(--gutter);
+    right: auto;
+    text-align: left;
+    bottom: 15svh;
+    font-size: clamp(2.3rem, 10.5vw, 3.6rem);
+    max-width: 7em;
+  }
+
+  .hero__note {
+    left: var(--gutter);
+    right: auto;
+  }
+
+  .hero__display {
+    top: auto;
+    bottom: 14svh;
+    max-width: 4.2em;
+    font-size: clamp(3.4rem, 17vw, 6rem);
+  }
+
+  .hero__quote {
+    top: 14svh;
+    right: var(--gutter);
+    font-size: clamp(2.3rem, 11vw, 3.6rem);
+  }
+
+  /* above the pendants, on the open wall */
+  .hero__signature {
+    left: var(--gutter);
+    right: var(--gutter);
+    top: 15svh;
+    width: auto;
+  }
+
+  .hero__signature .hero__wordmark {
+    width: 72%;
+  }
+
+  .hero__controls {
+    left: var(--gutter);
+    right: auto;
+  }
+}
+
+/* ---------- reduced motion / fallback ---------- */
+
+.hero-static {
+  background: var(--ink);
+  color: var(--paper);
+}
+
+.hero-static__frame {
+  position: relative;
+}
+
+.hero-static__frame img {
+  width: 100%;
+  height: auto;
+  min-height: 56svh;
+  object-fit: cover;
+}
+
+/* type below the photograph, never over the piece */
+.hero-static__frame figcaption {
+  display: grid;
+  gap: 18px;
+  padding: clamp(32px, 7svh, 72px) var(--gutter) clamp(48px, 10svh, 112px);
+}
+
+.hero-static__frame:not(.hero-static__frame--dark) {
+  background: var(--mineral);
+  color: var(--ink);
+}
+
+.hero-static .hero__display,
+.hero-static .hero__quote {
+  position: static;
+}
+
+.hero-static__signature {
+  background: var(--paper);
+  color: var(--ink);
+  padding: clamp(64px, 14svh, 160px) var(--gutter);
+  display: grid;
+  gap: 24px;
+}
+
+.hero-static__signature .hero__wordmark {
+  width: min(560px, 80vw);
+}

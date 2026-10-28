@@ -1,0 +1,296 @@
+/* ---------- Product page: the piece on the left, its sheet on the right ---------- */
+
+.ppage {
+  --rule: color-mix(in oklab, var(--ink) 11%, transparent);
+  --top: clamp(92px, 12svh, 120px);
+  padding: var(--top) var(--gutter) 0;
+}
+
+.ppage--missing {
+  min-height: 70svh;
+  display: grid;
+  place-content: center;
+  gap: 16px;
+  text-align: center;
+}
+
+.ppage__layout {
+  display: grid;
+  grid-template-columns: repeat(12, minmax(0, 1fr));
+  column-gap: clamp(16px, 2vw, 32px);
+  align-items: start;
+}
+
+/* the piece: always whole, always within one screen */
+.ppage__media {
+  grid-column: 1 / span 7;
+  position: sticky;
+  top: var(--top);
+  display: grid;
+  justify-items: center;
+  gap: 14px;
+}
+
+/* the frame takes the photograph's own proportion: whole, uncropped, never taller than the screen */
+.ppage__main {
+  --h: max(420px, calc(100svh - var(--top) - 112px));
+  position: relative;
+  display: block;
+  width: min(100%, calc(var(--h) * var(--r, 1)));
+  aspect-ratio: var(--r, 1);
+  overflow: hidden;
+  cursor: zoom-in;
+  background: var(--mineral);
+}
+
+.ppage__main--empty {
+  display: grid;
+  place-items: center;
+  color: var(--stone);
+  cursor: default;
+}
+
+.ppage__main-frame {
+  position: absolute;
+  inset: 0;
+  animation: main-in 0.9s var(--ease-out) both;
+}
+
+/* the whole piece, never cropped; the frame takes the photograph's own ground */
+.ppage__main-frame img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  background: transparent !important;
+  transition: transform 1.4s var(--ease-out);
+}
+
+@keyframes main-in {
+  from { opacity: 0; transform: scale(1.03); }
+}
+
+.ppage__zoom {
+  position: absolute;
+  right: 14px;
+  bottom: 14px;
+  padding: 8px 12px;
+  border-radius: 999px;
+  background: color-mix(in oklab, var(--paper) 88%, transparent);
+  font-size: 10.5px;
+  font-weight: 500;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  opacity: 0;
+  transition: opacity 0.4s var(--ease-out);
+}
+
+@media (hover: hover) {
+  .ppage__main:hover .ppage__zoom { opacity: 1; }
+  .ppage__main:hover .ppage__main-frame img { transform: scale(1.02); }
+}
+
+.ppage__thumbs {
+  display: flex;
+  gap: 10px;
+  overflow-x: auto;
+  scrollbar-width: none;
+  padding: 4px 2px;
+}
+
+.ppage__thumbs button {
+  display: block;
+  width: 72px;
+  height: 72px;
+  overflow: hidden;
+  opacity: 0.5;
+  outline: 1px solid transparent;
+  outline-offset: 3px;
+  transition: opacity 0.4s var(--ease-out), outline-color 0.4s var(--ease-out);
+}
+
+.ppage__thumbs button[aria-pressed='true'] {
+  opacity: 1;
+  outline-color: var(--ink);
+}
+
+.ppage__thumbs button:hover { opacity: 1; }
+
+.ppage__thumbs img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* the sheet */
+.ppage__sheet {
+  grid-column: 9 / span 4;
+  display: grid;
+  gap: clamp(22px, 3.4svh, 36px);
+  padding-top: 4px;
+  padding-bottom: 48px;
+  animation: sheet-in 1s var(--ease-out) both 0.15s;
+}
+
+@keyframes sheet-in {
+  from { opacity: 0; transform: translateY(18px); }
+}
+
+.ppage__crumbs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  color: var(--stone);
+}
+
+.ppage__crumbs a {
+  text-decoration: none;
+  color: var(--ink);
+}
+
+.ppage__title {
+  display: grid;
+  gap: 6px;
+  font-family: var(--font-display);
+  font-weight: 400;
+  font-size: clamp(3rem, 5vw, 5.8rem);
+  line-height: 0.88;
+  letter-spacing: -0.03em;
+}
+
+.ppage__title-collection {
+  font-style: italic;
+  font-size: 0.42em;
+  letter-spacing: -0.01em;
+  color: var(--stone);
+}
+
+.ppage__description {
+  font-family: var(--font-display);
+  font-size: clamp(1.25rem, 1.5vw, 1.55rem);
+  line-height: 1.25;
+  max-width: 24em;
+  text-wrap: pretty;
+}
+
+.ppage__specs {
+  margin: 0;
+  border-top: 1px solid var(--ink);
+}
+
+.ppage__specs div {
+  display: grid;
+  grid-template-columns: 7.5rem 1fr;
+  gap: 16px;
+  padding: 15px 0;
+  border-bottom: 1px solid var(--rule);
+}
+
+.ppage__specs dt {
+  padding-top: 2px;
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--stone);
+}
+
+.ppage__specs dd {
+  margin: 0;
+  display: grid;
+  gap: 4px;
+  font-size: 14.5px;
+  line-height: 1.5;
+  font-variant-numeric: tabular-nums;
+}
+
+.ppage__actions {
+  display: grid;
+  gap: 10px;
+}
+
+/* other pieces: a strip that scrolls sideways */
+.ppage__others {
+  margin-top: clamp(96px, 16svh, 200px);
+  padding: clamp(56px, 9svh, 96px) 0 clamp(96px, 16svh, 180px);
+  border-top: 1px solid var(--rule);
+}
+
+.ppage__others-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 24px;
+  margin-bottom: clamp(28px, 5svh, 56px);
+}
+
+.ppage__h2 {
+  font-family: var(--font-display);
+  font-weight: 400;
+  font-size: clamp(2.2rem, 4vw, 4.4rem);
+  line-height: 0.95;
+  letter-spacing: -0.02em;
+}
+
+.ppage__others-list {
+  display: grid;
+  grid-auto-flow: column;
+  grid-auto-columns: clamp(220px, 21vw, 320px);
+  gap: clamp(16px, 2vw, 32px);
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  scrollbar-width: thin;
+  margin: 0 calc(var(--gutter) * -1);
+  padding: 0 var(--gutter) 18px;
+  scroll-padding: 0 var(--gutter);
+}
+
+.ppage__others-list li {
+  scroll-snap-align: start;
+}
+
+/* ---------- tablets & phones ---------- */
+
+@media (max-width: 1023px) {
+  .ppage { --top: 84px; }
+
+  .ppage__layout {
+    grid-template-columns: 1fr;
+    row-gap: 32px;
+  }
+
+  .ppage__media {
+    grid-column: 1;
+    position: static;
+    margin: 0 calc(var(--gutter) * -1);
+  }
+
+  .ppage__main {
+    --h: 68svh;
+    margin-inline: auto;
+  }
+
+  .ppage__thumbs {
+    padding: 4px var(--gutter);
+  }
+
+  .ppage__thumbs button {
+    width: 60px;
+    height: 60px;
+  }
+
+  .ppage__sheet {
+    grid-column: 1;
+  }
+
+  .ppage__title {
+    font-size: clamp(3rem, 14vw, 5rem);
+  }
+
+  .ppage__others {
+    margin-top: 56px;
+  }
+
+  .ppage__others-list {
+    grid-auto-columns: 62vw;
+  }
+}

@@ -1,0 +1,163 @@
+.site-header {
+  --header-fg: var(--ink);
+  position: fixed;
+  inset: 0 0 auto 0;
+  z-index: 50;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: clamp(18px, 3svh, 32px) var(--gutter);
+  color: var(--header-fg);
+  transition: color 0.6s var(--ease-out), translate 0.6s var(--ease-out);
+  pointer-events: none;
+}
+
+/* on phones only the top bar tucks away; the thumb menu stays */
+.site-header[data-tucked] .site-header__brand,
+.site-header[data-tucked] .site-header__nav {
+  translate: 0 -160%;
+}
+
+.site-header__brand,
+.site-header__nav {
+  transition: translate 0.6s var(--ease-out);
+}
+
+.site-header > * {
+  pointer-events: auto;
+}
+
+/* the ground slides in behind the header once a page leaves its top */
+.site-header::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: var(--paper);
+  border-bottom: 1px solid color-mix(in oklab, var(--ink) 8%, transparent);
+  opacity: 0;
+  transform: translateY(-100%);
+  transition: opacity 0.5s var(--ease-out), transform 0.6s var(--ease-out);
+}
+
+.site-header[data-solid]::before {
+  opacity: 1;
+  transform: none;
+}
+
+.site-header[data-solid][data-tucked]::before {
+  transform: translateY(-100%);
+}
+
+.site-header {
+  transition: color 0.6s var(--ease-out), padding 0.5s var(--ease-out);
+}
+
+.site-header[data-solid] {
+  padding-block: clamp(14px, 2svh, 20px);
+}
+
+:root[data-header-tone='light'] .site-header {
+  --header-fg: var(--paper);
+}
+
+.site-header__skip {
+  position: absolute;
+  left: var(--gutter);
+  top: 8px;
+  padding: 8px 12px;
+  background: var(--paper);
+  color: var(--ink);
+  font-size: 13px;
+  transform: translateY(-200%);
+}
+
+.site-header__skip:focus-visible {
+  transform: none;
+}
+
+.site-header__brand {
+  display: block;
+  width: 96px;
+  padding: 6px 0;
+}
+
+.site-header__nav ul {
+  display: flex;
+  gap: clamp(20px, 3vw, 44px);
+}
+
+.site-header__nav a {
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  text-decoration: none;
+  padding: 8px 0;
+  background: linear-gradient(currentColor, currentColor) 0 calc(100% - 4px) / 0 1px no-repeat;
+  transition: background-size 0.5s var(--ease-out);
+}
+
+@media (hover: hover) {
+  .site-header__nav a:hover {
+    background-size: 100% 1px;
+  }
+}
+
+.site-header__menu,
+.site-header__sheet {
+  display: none;
+}
+
+/* phones: wordmark stays top-left, the menu moves under the thumb */
+@media (max-width: 760px) {
+  .site-header__nav {
+    display: none;
+  }
+
+  .site-header__menu {
+    display: block;
+    position: fixed;
+    right: var(--gutter);
+    bottom: max(20px, env(safe-area-inset-bottom));
+    z-index: 2;
+    min-width: 76px;
+    padding: 13px 20px;
+    border-radius: 999px;
+    background: var(--paper);
+    color: var(--ink);
+    font-size: 12px;
+    font-weight: 500;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    box-shadow: 0 6px 24px rgb(0 0 0 / 0.18);
+  }
+
+  .site-header__sheet:not([hidden]) {
+    display: flex;
+    align-items: flex-end;
+    position: fixed;
+    inset: 0;
+    padding: var(--gutter) var(--gutter) 120px;
+    background: var(--ink);
+    color: var(--paper);
+  }
+
+  .site-header__sheet a {
+    display: block;
+    padding: 6px 0;
+    font-family: var(--font-display);
+    font-size: 3.2rem;
+    line-height: 1;
+    text-decoration: none;
+  }
+
+  .site-header[data-open] {
+    --header-fg: var(--paper);
+  }
+
+  .site-header[data-open] .site-header__brand {
+    position: relative;
+    z-index: 1;
+  }
+}

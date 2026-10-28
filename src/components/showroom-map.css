@@ -1,0 +1,200 @@
+.smap {
+  position: relative;
+  height: min(76svh, 760px);
+  min-height: 460px;
+  overflow: hidden;
+  background: #e6e1d9;
+}
+
+.smap__canvas {
+  position: absolute;
+  inset: 0;
+  background: #e6e1d9;
+  font-family: var(--font-text);
+}
+
+/* the base map, warmed to the site's paper and mineral greys */
+.smap .leaflet-tile-pane {
+  filter: sepia(0.32) saturate(0.55) hue-rotate(-8deg) brightness(1.01) contrast(0.94);
+}
+
+.smap .leaflet-container {
+  background: #e6e1d9;
+}
+
+/* a soft vignette, like light falling off around the point */
+.smap__canvas::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 450;
+  pointer-events: none;
+  background: radial-gradient(ellipse at 62% 50%, transparent 40%, rgb(214 207 196 / 0.55) 100%);
+}
+
+/* the showroom as a point of 2700K light */
+.showroom-light {
+  pointer-events: none;
+}
+
+.showroom-light span {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  border-radius: 50%;
+  translate: -50% -50%;
+}
+
+.showroom-light__halo {
+  width: 120px;
+  height: 120px;
+  background: radial-gradient(circle, rgb(242 196 141 / 0.75) 0%, rgb(242 196 141 / 0.28) 32%, transparent 70%);
+  filter: blur(2px);
+}
+
+.showroom-light__ring {
+  width: 30px;
+  height: 30px;
+  border: 1px solid rgb(176 112 52 / 0.65);
+  animation: light-breathe 3.2s var(--ease-in-out) infinite;
+}
+
+.showroom-light__core {
+  width: 11px;
+  height: 11px;
+  background: #fff6ea;
+  box-shadow: 0 0 0 3px #f2c48d, 0 0 18px 6px rgb(242 196 141 / 0.95);
+}
+
+@keyframes light-breathe {
+  0%, 100% { transform: scale(1); opacity: 0.9; }
+  50% { transform: scale(2.1); opacity: 0; }
+}
+
+/* controls in the site's language */
+.smap .leaflet-control-zoom {
+  margin: 18px !important;
+  border: 0 !important;
+  box-shadow: none !important;
+  display: grid;
+  gap: 6px;
+}
+
+.smap .leaflet-control-zoom a {
+  width: 40px !important;
+  height: 40px !important;
+  line-height: 38px !important;
+  border: 1px solid color-mix(in oklab, var(--ink) 16%, transparent) !important;
+  border-radius: 999px !important;
+  background: color-mix(in oklab, var(--paper) 92%, transparent) !important;
+  color: var(--ink) !important;
+  font-family: var(--font-text);
+  font-weight: 300;
+  font-size: 18px !important;
+  transition: background-color 0.3s, color 0.3s;
+}
+
+.smap .leaflet-control-zoom a:hover {
+  background: var(--ink) !important;
+  color: var(--paper) !important;
+}
+
+.smap .leaflet-control-attribution {
+  background: transparent !important;
+  font-size: 9.5px;
+  letter-spacing: 0.02em;
+  color: color-mix(in oklab, var(--ink) 55%, transparent);
+}
+
+.smap .leaflet-control-attribution a {
+  color: inherit;
+}
+
+/* the address card */
+.smap__card {
+  position: absolute;
+  left: clamp(14px, 2.4vw, 32px);
+  bottom: clamp(14px, 2.4vw, 32px);
+  z-index: 500;
+  width: min(360px, calc(100% - 28px));
+  display: grid;
+  gap: 14px;
+  padding: clamp(20px, 2.4vw, 28px);
+  background: var(--ink);
+  color: var(--paper);
+  box-shadow: 0 30px 60px -30px rgb(0 0 0 / 0.55);
+}
+
+.smap__label {
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--light-2700);
+}
+
+.smap__address {
+  display: grid;
+  font-style: normal;
+  font-family: var(--font-display);
+  font-size: clamp(1.35rem, 1.7vw, 1.7rem);
+  line-height: 1.15;
+}
+
+.smap__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  padding-top: 14px;
+  border-top: 1px solid color-mix(in oklab, var(--paper) 16%, transparent);
+}
+
+.smap__actions a,
+.smap__actions button {
+  padding: 9px 14px;
+  border: 1px solid color-mix(in oklab, var(--paper) 30%, transparent);
+  border-radius: 999px;
+  font-size: 10.5px;
+  font-weight: 500;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  text-decoration: none;
+  color: var(--paper);
+  transition: background-color 0.35s, color 0.35s;
+}
+
+.smap__actions a:hover,
+.smap__actions button:hover {
+  background: var(--paper);
+  color: var(--ink);
+}
+
+.smap__fallback {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  font-family: var(--font-display);
+  font-size: 1.6rem;
+}
+
+@media (max-width: 760px) {
+  .smap {
+    height: auto;
+    min-height: 0;
+    display: grid;
+  }
+
+  .smap__canvas {
+    position: relative;
+    height: 62svh;
+  }
+
+  .smap__card {
+    position: relative;
+    left: auto;
+    bottom: auto;
+    width: 100%;
+    box-shadow: none;
+  }
+}
